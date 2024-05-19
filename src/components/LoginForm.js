@@ -10,8 +10,8 @@ const LoginForm = () => {
 
   const initialValues = { email: "", password: "" };
   const validationSchema = Yup.object({
-    email: Yup.string().email("Email inválido").required("Obrigatório"),
-    password: Yup.string().required("Obrigatório"),
+    email: Yup.string().email("Email inválido").required("*Obrigatório"),
+    password: Yup.string().required("*Obrigatório"),
   });
 
   const onSubmit = (values) => {
@@ -37,7 +37,7 @@ const LoginForm = () => {
         }}
       >
         <Typography variant="h4" component="h1" gutterBottom color={"#4caf50"}>
-          Login
+          Conta Certa
         </Typography>
         <Formik
           initialValues={initialValues}
@@ -53,7 +53,14 @@ const LoginForm = () => {
                 fullWidth
                 margin="normal"
                 variant="outlined"
-                helperText={<ErrorMessage name="email" />}
+                helperText={
+                  <ErrorMessage
+                    name="email"
+                    component="div"
+                    style={{ color: "red" }}
+                  />
+                }
+                color="success"
               />
               <Field
                 name="password"
@@ -63,7 +70,14 @@ const LoginForm = () => {
                 fullWidth
                 margin="normal"
                 variant="outlined"
-                helperText={<ErrorMessage name="password" />}
+                helperText={
+                  <ErrorMessage
+                    name="password"
+                    component="div"
+                    style={{ color: "red" }}
+                  />
+                }
+                color="success"
               />
               <Button
                 type="submit"

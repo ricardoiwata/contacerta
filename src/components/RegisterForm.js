@@ -3,14 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import api from "../services/api";
 import { useNavigate } from "react-router-dom";
-import {
-  TextField,
-  Button,
-  Container,
-  Typography,
-  Grid,
-  Paper,
-} from "@mui/material";
+import { TextField, Button, Container, Grid, Paper } from "@mui/material";
 
 const RegisterForm = () => {
   const navigate = useNavigate();
@@ -24,15 +17,15 @@ const RegisterForm = () => {
   };
 
   const validationSchema = Yup.object({
-    name: Yup.string().required("Obrigatório"),
-    email: Yup.string().email("Email inválido").required("Obrigatório"),
+    name: Yup.string().required("*Obrigatório"),
+    email: Yup.string().email("Email inválido").required("*Obrigatório"),
     password: Yup.string()
       .min(6, "Senha deve ter no mínimo 6 caracteres")
-      .required("Obrigatório"),
+      .required("*Obrigatório"),
     cpf: Yup.string()
       .matches(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, "CPF inválido")
-      .required("Obrigatório"),
-    birthdate: Yup.date().required("Obrigatório"),
+      .required("*Obrigatório"),
+    birthdate: Yup.date().required("*Obrigatório"),
   });
 
   const onSubmit = (values) => {
@@ -58,9 +51,6 @@ const RegisterForm = () => {
           alignItems: "center",
         }}
       >
-        <Typography variant="h5" mb={2}>
-          Registro
-        </Typography>
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -79,7 +69,14 @@ const RegisterForm = () => {
                     label="Nome"
                     fullWidth
                     variant="outlined"
-                    helperText={<ErrorMessage name="name" />}
+                    helperText={
+                      <ErrorMessage
+                        name="name"
+                        component="div"
+                        style={{ color: "red" }}
+                      />
+                    }
+                    color="success"
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -89,7 +86,14 @@ const RegisterForm = () => {
                     label="Email"
                     fullWidth
                     variant="outlined"
-                    helperText={<ErrorMessage name="email" />}
+                    helperText={
+                      <ErrorMessage
+                        name="email"
+                        component="div"
+                        style={{ color: "red" }}
+                      />
+                    }
+                    color="success"
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -100,7 +104,14 @@ const RegisterForm = () => {
                     type="password"
                     fullWidth
                     variant="outlined"
-                    helperText={<ErrorMessage name="password" />}
+                    helperText={
+                      <ErrorMessage
+                        name="password"
+                        component="div"
+                        style={{ color: "red" }}
+                      />
+                    }
+                    color="success"
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -110,7 +121,14 @@ const RegisterForm = () => {
                     label="CPF"
                     fullWidth
                     variant="outlined"
-                    helperText={<ErrorMessage name="cpf" />}
+                    helperText={
+                      <ErrorMessage
+                        name="cpf"
+                        component="div"
+                        style={{ color: "red" }}
+                      />
+                    }
+                    color="success"
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -122,7 +140,14 @@ const RegisterForm = () => {
                     InputLabelProps={{ shrink: true }}
                     fullWidth
                     variant="outlined"
-                    helperText={<ErrorMessage name="birthdate" />}
+                    helperText={
+                      <ErrorMessage
+                        name="birthdate"
+                        component="div"
+                        style={{ color: "red" }}
+                      />
+                    }
+                    color="success"
                   />
                 </Grid>
                 <Grid item xs={12}>

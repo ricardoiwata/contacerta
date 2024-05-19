@@ -8,18 +8,17 @@ function RegisterPage() {
     <Container maxWidth="xs">
       <Box
         sx={{
-          marginTop: 8,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
         }}
       >
-        <Typography variant="h4" component="h1" gutterBottom>
-          Conta Certa
-        </Typography>
         <RegisterForm />
         <Typography variant="body2" sx={{ mt: 2 }}>
-          Já tem uma conta? <Link to="/">Faça login</Link>
+          Já tem uma conta?{" "}
+          <Link to="/" style={{ color: "#2e7d32" }}>
+            Faça login
+          </Link>
         </Typography>
       </Box>
     </Container>

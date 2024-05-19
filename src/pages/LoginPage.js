@@ -15,13 +15,10 @@ function LoginPage() {
           alignItems: "center",
         }}
       >
-        <Typography variant="h4" component="h1" gutterBottom color={"#4caf50"}>
-          Conta Certa
-        </Typography>
         <LoginForm />
         <Typography variant="body2" sx={{ mt: 2 }}>
           Não tem uma conta?{" "}
-          <Link color="#1b5e20" to="/register">
+          <Link style={{ color: "#2e7d32" }} to="/register">
             Registre-se
           </Link>
         </Typography>
