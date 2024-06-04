@@ -2,6 +2,7 @@ import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import api from "../services/api";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { TextField, Button, Container, Typography, Box } from "@mui/material";
 
@@ -14,16 +15,17 @@ const LoginForm = () => {
     password: Yup.string().required("*Obrigatório"),
   });
 
-  const onSubmit = (values) => {
-    api
-      .post("/api/login", values)
-      .then((response) => {
-        localStorage.setItem("token", response.data.token);
-        navigate("/dashboard");
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+  const onSubmit = async (values, { setSubmitting }) => {
+    try {
+      const response = await api.login(values);
+      setSubmitting(false);
+      localStorage.setItem("token", response.data.token);
+      navigate("/dashboard");
+    } catch (error) {
+      toast.error(error);
+      console.error(error);
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -37,7 +39,7 @@ const LoginForm = () => {
         }}
       >
         <Typography variant="h4" component="h1" gutterBottom color={"#4caf50"}>
-          Conta Certa
+          Conta Certa 💸
         </Typography>
         <Formik
           initialValues={initialValues}
