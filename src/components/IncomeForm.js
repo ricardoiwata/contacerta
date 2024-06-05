@@ -21,14 +21,7 @@ const IncomeForm = ({ income: initialIncome, onClose }) => {
 
   useEffect(() => {
     if (initialIncome) {
-      // Transform the date format to YYYY-MM-DD if it's not already
-      const formattedIncome = {
-        ...initialIncome,
-        dueDate: initialIncome.dueDate
-          ? new Date(initialIncome.dueDate).toISOString().split("T")[0]
-          : "",
-      };
-      setIncome(formattedIncome);
+      setIncome(initialIncome);
     }
   }, [initialIncome]);
 
@@ -128,7 +121,11 @@ const IncomeForm = ({ income: initialIncome, onClose }) => {
             name="date"
             type="date"
             InputLabelProps={{ shrink: true }}
-            value={income.date}
+            value={
+              income.date
+                ? new Date(income.date).toISOString().split("T")[0]
+                : ""
+            }
             onChange={handleChange}
             required
             color="success"

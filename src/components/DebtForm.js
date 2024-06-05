@@ -23,14 +23,7 @@ const DebtForm = ({ debt: initialDebt, onClose }) => {
 
   useEffect(() => {
     if (initialDebt) {
-      // Transform the date format to YYYY-MM-DD if it's not already
-      const formattedDebt = {
-        ...initialDebt,
-        dueDate: initialDebt.dueDate
-          ? new Date(initialDebt.dueDate).toISOString().split("T")[0]
-          : "",
-      };
-      setDebt(formattedDebt);
+      setDebt(initialDebt);
     }
   }, [initialDebt]);
 
@@ -101,11 +94,15 @@ const DebtForm = ({ debt: initialDebt, onClose }) => {
         <TextField
           margin="normal"
           fullWidth
-          label="Data de Vencimento"
+          label="Data de vencimento"
           name="dueDate"
           type="date"
           InputLabelProps={{ shrink: true }}
-          value={debt.dueDate}
+          value={
+            debt.dueDate
+              ? new Date(debt.dueDate).toISOString().split("T")[10]
+              : ""
+          }
           onChange={handleChange}
           required
           color="success"

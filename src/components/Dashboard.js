@@ -65,6 +65,9 @@ const Dashboard = () => {
         (acc, debt) => acc + debt.value,
         0
       );
+      setIncomes(incomesResponse.data);
+      setExpenses(expensesResponse.data);
+      setDebts(debtsResponse.data);
       setTotalIncome(totalIncome);
       setTotalExpense(totalExpense);
       setTotalDebts(totalDebts);
@@ -73,44 +76,17 @@ const Dashboard = () => {
     }
   };
 
-  useEffect(() => {
-    fetchIncomes();
-    fetchExpenses();
-    fetchDebts();
-  }, []);
-
-  const fetchIncomes = async () => {
-    try {
-      const response = await apiService.getIncomes();
-      setIncomes(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const fetchExpenses = async () => {
-    try {
-      const response = await apiService.getExpenses();
-      setExpenses(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const fetchDebts = async () => {
-    try {
-      const response = await apiService.getDebts();
-      setDebts(response.data);
-    } catch (error) {
-      console.error(error);
-    }
+  const addOneDay = (date) => {
+    const newDate = new Date(date);
+    newDate.setDate(newDate.getDate() + 1);
+    return newDate;
   };
 
   const handleDeleteIncome = async (id) => {
     try {
       await apiService.deleteIncome(id);
       toast.success("Renda deletada com sucesso!");
-      fetchIncomes();
+      fetchData();
     } catch (error) {
       console.error(error);
     }
@@ -120,7 +96,7 @@ const Dashboard = () => {
     try {
       await apiService.deleteExpense(id);
       toast.success("Despesa deletada com sucesso!");
-      fetchExpenses();
+      fetchData();
     } catch (error) {
       console.error(error);
     }
@@ -130,7 +106,7 @@ const Dashboard = () => {
     try {
       await apiService.deleteDebt(id);
       toast.success("Dívida deletada com sucesso!");
-      fetchDebts();
+      fetchData();
     } catch (error) {
       console.error(error);
     }
@@ -139,19 +115,16 @@ const Dashboard = () => {
   const handleEditIncome = (income) => {
     setEditIncome(income);
     setOpenEditIncomeModal(true);
-    fetchIncomes();
   };
 
   const handleEditExpense = (expense) => {
     setEditExpense(expense);
     setOpenEditExpenseModal(true);
-    fetchExpenses();
   };
 
   const handleEditDebt = (debt) => {
     setEditDebt(debt);
     setOpenEditDebtModal(true);
-    fetchDebts();
   };
 
   const renderContent = () => {
@@ -166,7 +139,8 @@ const Dashboard = () => {
         const incomePercentage = (totalIncome / total) * 100;
         const expensePercentage = (totalExpense / total) * 100;
         const debtsPercentage = (totalDebts / total) * 100;
-        const totalGastos = totalIncome + totalDebts;
+        const totalGastosPercentage = expensePercentage + debtsPercentage;
+        const totalGastos = totalExpense + totalDebts;
         let message;
 
         if (totalIncome > totalGastos) {
@@ -248,7 +222,6 @@ const Dashboard = () => {
                       height: 10,
                       borderRadius: 5,
                       overflow: "hidden",
-                      backgroundColor: "#ccc",
                       mt: 2,
                     }}
                   >
@@ -263,18 +236,9 @@ const Dashboard = () => {
                     />
                     <Box
                       sx={{
-                        width: `${expensePercentage}%`,
+                        width: `${totalGastosPercentage}%`,
                         height: "100%",
                         backgroundColor: "red",
-                        position: "absolute",
-                        right: 0,
-                      }}
-                    />
-                    <Box
-                      sx={{
-                        width: `${debtsPercentage}%`,
-                        height: "100%",
-                        backgroundColor: "orange",
                         position: "absolute",
                         right: 0,
                       }}
@@ -283,12 +247,11 @@ const Dashboard = () => {
                   <Typography variant="body2" color="textSecondary" mt={1}>
                     Renda:{" "}
                     {isNaN(incomePercentage) ? 0 : incomePercentage.toFixed(2)}%
-                    Gastos:{" "}
-                    {isNaN(expensePercentage)
+                    Gastos/Dívidas:{" "}
+                    {isNaN(totalGastosPercentage)
                       ? 0
-                      : expensePercentage.toFixed(2)}
-                    % Dívidas:{" "}
-                    {isNaN(expensePercentage) ? 0 : debtsPercentage.toFixed(2)}%
+                      : totalGastosPercentage.toFixed(2)}
+                    %
                   </Typography>
                 </Box>
                 <Box sx={{ width: "100%", mt: 4 }}>
@@ -314,7 +277,7 @@ const Dashboard = () => {
                                   style: "currency",
                                   currency: "BRL",
                                 }
-                              ).format(income.value)} - Data: ${new Date(
+                              ).format(income.value)} - Data: ${addOneDay(
                                 income.date
                               ).toLocaleDateString()} - Recorrente: ${
                                 income.recurring ? "Sim" : "Não"
@@ -323,12 +286,14 @@ const Dashboard = () => {
                             <ListItemSecondaryAction>
                               <IconButton
                                 edge="end"
+                                aria-label="edit"
                                 onClick={() => handleEditIncome(income)}
                               >
                                 <Edit />
                               </IconButton>
                               <IconButton
                                 edge="end"
+                                aria-label="delete"
                                 onClick={() => handleDeleteIncome(income._id)}
                               >
                                 <Delete />
@@ -344,9 +309,9 @@ const Dashboard = () => {
                       )}
                     </Box>
                   </Box>
-                  <Typography variant="h6" sx={{ mt: 1 }}>
-                    Gastos
-                  </Typography>
+                </Box>
+                <Box sx={{ width: "100%", mt: 1 }}>
+                  <Typography variant="h6">Gastos</Typography>
                   <Box display="flex" alignItems="flex-start" gap={2}>
                     <Button
                       variant="contained"
@@ -356,14 +321,7 @@ const Dashboard = () => {
                     >
                       Registrar Gasto 💣
                     </Button>
-                    <Box
-                      flex={1}
-                      sx={{
-                        maxHeight: 150,
-                        overflowY: "auto",
-                        marginBottom: 4,
-                      }}
-                    >
+                    <Box flex={1} sx={{ maxHeight: 150, overflowY: "auto" }}>
                       <List disablePadding>
                         {expenses.map((expense) => (
                           <ListItem key={expense._id}>
@@ -375,7 +333,7 @@ const Dashboard = () => {
                                   style: "currency",
                                   currency: "BRL",
                                 }
-                              ).format(expense.value)} - Data: ${new Date(
+                              ).format(expense.value)} - Data: ${addOneDay(
                                 expense.date
                               ).toLocaleDateString()} - Recorrente: ${
                                 expense.recurring ? "Sim" : "Não"
@@ -384,12 +342,14 @@ const Dashboard = () => {
                             <ListItemSecondaryAction>
                               <IconButton
                                 edge="end"
+                                aria-label="edit"
                                 onClick={() => handleEditExpense(expense)}
                               >
                                 <Edit />
                               </IconButton>
                               <IconButton
                                 edge="end"
+                                aria-label="delete"
                                 onClick={() => handleDeleteExpense(expense._id)}
                               >
                                 <Delete />
@@ -405,9 +365,9 @@ const Dashboard = () => {
                       )}
                     </Box>
                   </Box>
-                  <Typography variant="h6" sx={{ mt: 1 }}>
-                    Dívidas
-                  </Typography>
+                </Box>
+                <Box sx={{ width: "100%", mt: 1 }}>
+                  <Typography variant="h6">Dívidas</Typography>
                   <Box
                     display="flex"
                     alignItems="flex-start"
@@ -422,7 +382,7 @@ const Dashboard = () => {
                     >
                       Registrar Dívida 📄
                     </Button>
-                    <Box flex={1} sx={{ maxHeight: 200, overflowY: "auto" }}>
+                    <Box flex={1} sx={{ maxHeight: 150, overflowY: "auto" }}>
                       <List disablePadding>
                         {debts.map((debt) => (
                           <ListItem key={debt._id}>
@@ -436,19 +396,21 @@ const Dashboard = () => {
                                 }
                               ).format(
                                 debt.value
-                              )} - Data de vencimento: ${new Date(
+                              )} - Data de vencimento: ${addOneDay(
                                 debt.dueDate
                               ).toLocaleDateString("pt-BR")}`}
                             />
                             <ListItemSecondaryAction>
                               <IconButton
                                 edge="end"
+                                aria-label="edit"
                                 onClick={() => handleEditDebt(debt)}
                               >
                                 <Edit />
                               </IconButton>
                               <IconButton
                                 edge="end"
+                                aria-label="delete"
                                 onClick={() => handleDeleteDebt(debt._id)}
                               >
                                 <Delete />
@@ -471,15 +433,17 @@ const Dashboard = () => {
         );
     }
   };
+
   return (
     <Box
       sx={{
+        minHeight: "100vh",
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        width: "100vw",
-        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "flex-start",
       }}
     >
       <Container width="50%" height="70%" marginBottom="20">
@@ -502,56 +466,99 @@ const Dashboard = () => {
             },
           }}
         >
-          <Tab value="calculator" label="Calculadora 📈" />
-          <Tab value="dashboard" label="Dashboard 📊" />
-          <Tab value="profile" label="Perfil ⚙️" />
+          <Tab label="Calculadora 📈" value="calculator" />
+          <Tab label="Dashboard 📊" value="dashboard" />
+          <Tab label="Perfil ⚙️" value="profile" />
         </Tabs>
         {renderContent()}
-        <Modal open={openIncomeModal} onClose={() => setOpenIncomeModal(false)}>
-          <IncomeForm
-            onClose={() => setOpenIncomeModal(false) && fetchData()}
-          />
-        </Modal>
-        <Modal
-          open={openExpenseModal}
-          onClose={() => setOpenExpenseModal(false)}
-        >
-          <ExpenseForm
-            onClose={() => setOpenExpenseModal(false) && fetchData()}
-          />
-        </Modal>
-        <Modal open={openDebtModal} onClose={() => setOpenDebtModal(false)}>
-          <DebtForm onClose={() => setOpenDebtModal(false) && fetchData()} />
-        </Modal>
-
-        <Modal
-          open={openEditIncomeModal}
-          onClose={() => setOpenEditIncomeModal(false) && fetchData()}
-        >
-          <IncomeForm
-            income={editIncome}
-            onClose={() => setOpenEditIncomeModal(false) && fetchData()}
-          />
-        </Modal>
-        <Modal
-          open={openEditExpenseModal}
-          onClose={() => setOpenEditExpenseModal(false) && fetchData()}
-        >
-          <ExpenseForm
-            expense={editExpense}
-            onClose={() => setOpenEditExpenseModal(false) && fetchData()}
-          />
-        </Modal>
-        <Modal
-          open={openEditDebtModal}
-          onClose={() => setOpenEditDebtModal(false) && fetchData()}
-        >
-          <DebtForm
-            debt={editDebt}
-            onClose={() => setOpenEditDebtModal(false)}
-          />
-        </Modal>
       </Container>
+
+      <Modal
+        open={openIncomeModal}
+        onClose={() => setOpenIncomeModal(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <IncomeForm
+          onClose={() => {
+            setOpenIncomeModal(false);
+            fetchData();
+          }}
+        />
+      </Modal>
+
+      <Modal
+        open={openExpenseModal}
+        onClose={() => setOpenExpenseModal(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <ExpenseForm
+          onClose={() => {
+            setOpenExpenseModal(false);
+            fetchData();
+          }}
+        />
+      </Modal>
+
+      <Modal
+        open={openDebtModal}
+        onClose={() => setOpenDebtModal(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <DebtForm
+          onClose={() => {
+            setOpenDebtModal(false);
+            fetchData();
+          }}
+        />
+      </Modal>
+
+      <Modal
+        open={openEditIncomeModal}
+        onClose={() => setOpenEditIncomeModal(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <IncomeForm
+          income={editIncome}
+          onClose={() => {
+            setOpenEditIncomeModal(false);
+            fetchData();
+          }}
+        />
+      </Modal>
+
+      <Modal
+        open={openEditExpenseModal}
+        onClose={() => setOpenEditExpenseModal(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <ExpenseForm
+          expense={editExpense}
+          onClose={() => {
+            setOpenEditExpenseModal(false);
+            fetchData();
+          }}
+        />
+      </Modal>
+
+      <Modal
+        open={openEditDebtModal}
+        onClose={() => setOpenEditDebtModal(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <DebtForm
+          debt={editDebt}
+          onClose={() => {
+            setOpenEditDebtModal(false);
+            fetchData();
+          }}
+        />
+      </Modal>
     </Box>
   );
 };

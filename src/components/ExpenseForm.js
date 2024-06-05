@@ -21,14 +21,7 @@ const ExpenseForm = ({ expense: initialExpense, onClose }) => {
 
   useEffect(() => {
     if (initialExpense) {
-      // Transform the date format to YYYY-MM-DD if it's not already
-      const formattedExpense = {
-        ...initialExpense,
-        dueDate: initialExpense.dueDate
-          ? new Date(initialExpense.dueDate).toISOString().split("T")[0]
-          : "",
-      };
-      setExpense(formattedExpense);
+      setExpense(initialExpense);
     }
   }, [initialExpense]);
 
@@ -128,7 +121,11 @@ const ExpenseForm = ({ expense: initialExpense, onClose }) => {
             name="date"
             type="date"
             InputLabelProps={{ shrink: true }}
-            value={expense.date}
+            value={
+              expense.date
+                ? new Date(expense.date).toISOString().split("T")[10]
+                : ""
+            }
             onChange={handleChange}
             required
             color="success"
