@@ -3,8 +3,9 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import api from "../services/api";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { TextField, Button, Container, Typography, Box } from "@mui/material";
+import icon from "../assets/images/loginIconContaCerta.png"; // Certifique-se de que o caminho esteja correto
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ const LoginForm = () => {
       localStorage.setItem("token", response.data.token);
       navigate("/dashboard");
     } catch (error) {
-      toast.error(error);
+      toast.error(error.message);
       console.error(error);
       setSubmitting(false);
     }
@@ -32,67 +33,85 @@ const LoginForm = () => {
     <Container maxWidth="xs">
       <Box
         sx={{
-          marginTop: 8,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
+          backgroundColor: "white",
+          padding: 4,
+          borderRadius: 5,
+          boxShadow: 3,
+          mt: -2,
         }}
       >
-        <Typography variant="h4" component="h1" gutterBottom color={"#4caf50"}>
-          Conta Certa 💸
-        </Typography>
-        <Formik
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={onSubmit}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            mt: -3,
+          }}
         >
-          {({ handleSubmit }) => (
-            <Form onSubmit={handleSubmit}>
-              <Field
-                name="email"
-                as={TextField}
-                label="Email"
-                fullWidth
-                margin="normal"
-                variant="outlined"
-                helperText={
-                  <ErrorMessage
-                    name="email"
-                    component="div"
-                    style={{ color: "red" }}
-                  />
-                }
-                color="success"
-              />
-              <Field
-                name="password"
-                as={TextField}
-                label="Senha"
-                type="password"
-                fullWidth
-                margin="normal"
-                variant="outlined"
-                helperText={
-                  <ErrorMessage
-                    name="password"
-                    component="div"
-                    style={{ color: "red" }}
-                  />
-                }
-                color="success"
-              />
-              <Button
-                type="submit"
-                variant="contained"
-                fullWidth
-                sx={{ mt: 3 }}
-                color="success"
-              >
-                Login
-              </Button>
-            </Form>
-          )}
-        </Formik>
+          <img
+            src={icon}
+            alt="Conta Certa"
+            style={{ width: 200, height: 200 }}
+          />
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={onSubmit}
+          >
+            {({ handleSubmit }) => (
+              <Form onSubmit={handleSubmit}>
+                <Field
+                  name="email"
+                  as={TextField}
+                  label="Email"
+                  fullWidth
+                  margin="normal"
+                  variant="outlined"
+                  helperText={
+                    <ErrorMessage
+                      name="email"
+                      component="div"
+                      style={{ color: "red" }}
+                    />
+                  }
+                  color="success"
+                />
+                <Field
+                  name="password"
+                  as={TextField}
+                  label="Senha"
+                  type="password"
+                  fullWidth
+                  margin="normal"
+                  variant="outlined"
+                  helperText={
+                    <ErrorMessage
+                      name="password"
+                      component="div"
+                      style={{ color: "red" }}
+                    />
+                  }
+                  color="success"
+                />
+                <Button
+                  type="submit"
+                  variant="contained"
+                  fullWidth
+                  sx={{ mt: 3 }}
+                  color="success"
+                >
+                  Login
+                </Button>
+              </Form>
+            )}
+          </Formik>
+          <Typography variant="body2" sx={{ mt: 2 }}>
+            Não tem uma conta?{" "}
+            <Link style={{ color: "#2e7d32" }} to="/register">
+              Registre-se
+            </Link>
+          </Typography>
+        </Box>
       </Box>
     </Container>
   );

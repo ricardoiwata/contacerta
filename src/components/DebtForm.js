@@ -67,7 +67,7 @@ const DebtForm = ({ debt: initialDebt, onClose }) => {
         borderRadius: 2,
         width: 500,
         mx: "auto",
-        my: "10%",
+        mt: 3,
       }}
     >
       <Typography variant="h6" gutterBottom>

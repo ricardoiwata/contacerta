@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Typography, Box, TextField, Button } from "@mui/material";
+import { Container, Box, TextField, Button } from "@mui/material";
 import InputMask from "react-input-mask";
 import apiService from "../services/api";
 import { useNavigate } from "react-router-dom";
@@ -111,84 +111,93 @@ const Profile = () => {
     <Container maxWidth="sm">
       <Box
         sx={{
-          marginTop: 8,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
+          backgroundColor: "white",
+          backgroundPosition: "center",
+          height: "65vh",
+          borderRadius: 5,
         }}
       >
-        <Typography variant="h4" component="h1" gutterBottom color="#2e7d32">
-          Perfil
-        </Typography>
-        <form onSubmit={handleSubmit}>
-          <TextField
-            margin="normal"
-            fullWidth
-            label="Nome"
-            name="name"
-            value={user.name}
-            onChange={handleChange}
-            color="success"
-          />
-          <InputMask
-            mask="999.999.999-99"
-            value={user.cpf}
-            onChange={handleChange}
-          >
-            {() => (
-              <TextField
-                margin="normal"
-                fullWidth
-                label="CPF"
-                name="cpf"
-                error={!!errors.cpf}
-                helperText={errors.cpf}
-                color="success"
-              />
-            )}
-          </InputMask>
-          <TextField
-            margin="normal"
-            fullWidth
-            label="Email"
-            name="email"
-            value={user.email}
-            onChange={handleChange}
-            color="success"
-            error={!!errors.email}
-            helperText={errors.email}
-          />
-          <TextField
-            margin="normal"
-            fullWidth
-            label="Data de Nascimento"
-            name="birthdate"
-            type="date"
-            InputLabelProps={{ shrink: true }}
-            value={user.birthdate}
-            onChange={handleChange}
-            color="success"
-          />
+        <Box
+          sx={{
+            marginRight: 4,
+            marginLeft: 4,
+            marginTop: 8,
+            marginBottom: 4,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <form onSubmit={handleSubmit} sx>
+            <TextField
+              margin="normal"
+              fullWidth
+              label="Nome"
+              name="name"
+              value={user.name}
+              onChange={handleChange}
+              color="success"
+              sx={{ marginTop: 4 }}
+            />
+            <InputMask
+              mask="999.999.999-99"
+              value={user.cpf}
+              onChange={handleChange}
+            >
+              {() => (
+                <TextField
+                  margin="normal"
+                  fullWidth
+                  label="CPF"
+                  name="cpf"
+                  error={!!errors.cpf}
+                  helperText={errors.cpf}
+                  color="success"
+                />
+              )}
+            </InputMask>
+            <TextField
+              margin="normal"
+              fullWidth
+              label="Email"
+              name="email"
+              value={user.email}
+              onChange={handleChange}
+              color="success"
+              error={!!errors.email}
+              helperText={errors.email}
+            />
+            <TextField
+              margin="normal"
+              fullWidth
+              label="Data de Nascimento"
+              name="birthdate"
+              type="date"
+              InputLabelProps={{ shrink: true }}
+              value={user.birthdate}
+              onChange={handleChange}
+              color="success"
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="success"
+              sx={{ mt: 3 }}
+              disabled={!formChanged || !isEmailValid}
+            >
+              Salvar
+            </Button>
+          </form>
           <Button
-            type="submit"
-            fullWidth
             variant="contained"
             color="success"
-            sx={{ mt: 3 }}
-            disabled={!formChanged || !isEmailValid}
+            onClick={handleLogout}
+            sx={{ mt: 5 }}
           >
-            Salvar
+            Logout
           </Button>
-        </form>
-
-        <Button
-          variant="contained"
-          color="success"
-          onClick={handleLogout}
-          sx={{ mt: 3 }}
-        >
-          Logout
-        </Button>
+        </Box>
       </Box>
     </Container>
   );

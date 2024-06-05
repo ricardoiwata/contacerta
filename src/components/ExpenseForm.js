@@ -89,7 +89,7 @@ const ExpenseForm = ({ expense: initialExpense, onClose }) => {
         borderRadius: 2,
         width: 500,
         mx: "auto",
-        my: "10%",
+        mt: 10,
       }}
     >
       <Typography variant="h6" gutterBottom>
