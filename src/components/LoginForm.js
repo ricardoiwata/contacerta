@@ -5,7 +5,7 @@ import api from "../services/api";
 import { toast } from "react-toastify";
 import { useNavigate, Link } from "react-router-dom";
 import { TextField, Button, Container, Typography, Box } from "@mui/material";
-import icon from "../assets/images/loginIconContaCerta.png"; // Certifique-se de que o caminho esteja correto
+import icon from "../assets/images/loginIconContaCerta.png";
 
 const LoginForm = () => {
   const navigate = useNavigate();

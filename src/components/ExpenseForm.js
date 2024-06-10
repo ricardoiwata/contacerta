@@ -123,7 +123,7 @@ const ExpenseForm = ({ expense: initialExpense, onClose }) => {
             InputLabelProps={{ shrink: true }}
             value={
               expense.date
-                ? new Date(expense.date).toISOString().split("T")[10]
+                ? new Date(expense.date).toISOString().split("T")[0]
                 : ""
             }
             onChange={handleChange}

@@ -1,7 +1,7 @@
 import React from "react";
 import LoginForm from "../components/LoginForm";
 import { Container, Box } from "@mui/material";
-import backgroundImage from "../assets/images/fundo.jpg"; // Certifique-se de que o caminho esteja correto
+import backgroundImage from "../assets/images/fundo.jpg";
 
 function LoginPage() {
   return (

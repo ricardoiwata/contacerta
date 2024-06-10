@@ -4,9 +4,17 @@ import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import api from "../services/api";
-import { TextField, Button, Container, Grid, Paper } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Container,
+  Grid,
+  Paper,
+  Typography,
+} from "@mui/material";
 import InputMask from "react-input-mask";
 import { addYears, isBefore } from "date-fns";
+import { Link } from "react-router-dom";
 
 const validateCPF = (cpf) => {
   cpf = cpf.replace(/[^\d]+/g, "");
@@ -80,7 +88,7 @@ const RegisterForm = () => {
         elevation={3}
         sx={{
           padding: 3,
-          marginTop: 8,
+          marginTop: 1,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -216,7 +224,7 @@ const RegisterForm = () => {
                     variant="contained"
                     color="success"
                     fullWidth
-                    disabled={!(isValid && dirty)} // Desabilita se o formulário não for válido ou não foi modificado
+                    disabled={!(isValid && dirty)}
                   >
                     Registrar
                   </Button>
@@ -225,6 +233,12 @@ const RegisterForm = () => {
             </Form>
           )}
         </Formik>
+        <Typography variant="body2" sx={{ mt: 2 }}>
+          Já tem uma conta?{" "}
+          <Link to="/" style={{ color: "#2e7d32" }}>
+            Faça login
+          </Link>
+        </Typography>
       </Paper>
     </Container>
   );

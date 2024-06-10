@@ -1,27 +1,27 @@
 import React from "react";
 import RegisterForm from "../components/RegisterForm";
-import { Link } from "react-router-dom";
-import { Container, Typography, Box } from "@mui/material";
+import { Container, Box } from "@mui/material";
+import backgroundImage from "../assets/images/fundo.jpg";
 
 function RegisterPage() {
   return (
-    <Container maxWidth="xs">
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        width: "100vw",
+        height: "100vh",
+      }}
+    >
+      <Container maxWidth="xs">
         <RegisterForm />
-        <Typography variant="body2" sx={{ mt: 2 }}>
-          Já tem uma conta?{" "}
-          <Link to="/" style={{ color: "#2e7d32" }}>
-            Faça login
-          </Link>
-        </Typography>
-      </Box>
-    </Container>
+      </Container>
+    </Box>
   );
 }
 
